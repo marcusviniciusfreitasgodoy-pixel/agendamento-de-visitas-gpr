@@ -1,0 +1,9 @@
+{
+  "name": "Agendamento de Visita - Godoy Prime Realty",
+  "description": "Uma aplicação para agendamento de visitas a imóveis de alto padrão na Barra da Tijuca, com qualificação de segurança para proteger os proprietários e otimizar o processo.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
