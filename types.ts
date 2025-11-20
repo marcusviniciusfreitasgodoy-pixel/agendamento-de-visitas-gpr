@@ -1,22 +1,24 @@
-
 export interface CustomerData {
   fullName: string;
   email: string;
   phone: string;
+
   familyMonthlyIncome: string;
-  
-  // Property to Visit
-  propertyIdentifier: string; // Code, Link or Description
-  
+
+  // Identificador do imóvel (ID, URL, código etc.)
+  propertyIdentifier: string;
+
+  // Interesses
   propertyOfInterest: 'cobertura' | 'casa' | 'apartamento_tipo' | 'terreno';
   paymentMethod: 'financiamento' | 'a_vista' | 'permuta';
+
   hasProofOfIncome: boolean;
   driversLicense: File | null;
   financingAmount?: string;
   hasPreApprovedCredit?: 'sim' | 'nao';
   financialInstitution?: string;
-  
-  // Trade-in specific fields
+
+  // Trade-in (imóvel para vender)
   tradeInPropertyValue?: string;
   tradeInType?: string;
   tradeInBedrooms?: string;
@@ -24,10 +26,16 @@ export interface CustomerData {
   tradeInNeighborhood?: string;
   tradeInAddress?: string;
 
+  // Agendamento
   visitDate1: string;
   visitTime1: string;
   visitDate2: string;
   visitTime2: string;
+
+  // Campos adicionais opcionais
+  budgetMin?: string;
+  budgetMax?: string;
+  visitDetail?: string;
 
   // LGPD
   hasAcceptedTerms: boolean;
