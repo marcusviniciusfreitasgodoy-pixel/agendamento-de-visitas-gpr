@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { GoogleGenAI, Type } from '@google/genai';
 import { CustomerData, ScoreResult } from './types';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
@@ -103,19 +102,16 @@ const App: React.FC = () => {
       driversLicense: formData.driversLicense || null
     };
 
-    // Supabase
     await fetch("/.netlify/functions/save", {
       method: "POST",
       body: JSON.stringify(payload)
     });
 
-    // E-mail
     await fetch("/.netlify/functions/sendEmail", {
       method: "POST",
       body: JSON.stringify(payload)
     });
 
-    // WhatsApp
     const respWpp = await fetch("/.netlify/functions/notifyImobiliaria", {
       method: "POST",
       body: JSON.stringify(payload)
@@ -135,52 +131,38 @@ const App: React.FC = () => {
   `;
 
   // -----------------------------
-  // SUBMIT PRINCIPAL (CORRIGIDO)
+  // SUBMIT PRINCIPAL — via Function (CORRETO)
   // -----------------------------
   const handleFormSubmit = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     setScoreResult(null);
 
-    // Ir para a tela de carregamento
-    setStep(4);
+    setStep(4); // tela de carregamento
 
     try {
-      // IA
-      const ai = new GoogleGenAI({
-        apiKey: import.meta.env.VITE_GEMINI_API_KEY as string
-      });
-
       const prompt = generatePrompt(formData);
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-        config: {
-          responseMimeType: "application/json",
-          responseSchema: { type: Type.OBJECT }
-        }
+      // IA AGORA VIA NETLIFY FUNCTION
+      const resp = await fetch("/.netlify/functions/analisarPerfil", {
+        method: "POST",
+        body: JSON.stringify({ prompt })
       });
 
-      let raw = response.text?.trim() || "";
-      if (raw.startsWith("```")) raw = raw.replace(/```(json)?/g, "").trim();
-
+      const raw = await resp.text();
       const result = JSON.parse(raw);
+
       setScoreResult(result);
 
       // Salvar tudo
       await salvarAgendamento(result);
 
-      // Sucesso REAL
-      setStep(5);
+      setStep(5); // sucesso
 
     } catch (err) {
       console.error(err);
       setError("Ocorreu um erro ao processar a solicitação.");
-
-      // Mostrar Step 5 com erro
-      setStep(5);
-
+      setStep(5); // mostra tela de erro
     } finally {
       setIsLoading(false);
     }
