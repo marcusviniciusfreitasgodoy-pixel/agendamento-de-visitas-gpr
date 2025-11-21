@@ -1,3 +1,4 @@
+// netlify/functions/notifyImobiliaria.ts
 import { Handler } from "@netlify/functions";
 
 export const handler: Handler = async (event) => {
@@ -28,7 +29,7 @@ export const handler: Handler = async (event) => {
 
     const encoded = encodeURIComponent(message);
 
-    // Número confirmado por você
+    // Número da imobiliária
     const phone = "5521997250515";
 
     const waUrl = `https://wa.me/${phone}?text=${encoded}`;
